@@ -12,6 +12,10 @@ let state = {
     currentJournal: []
 };
 
+// Visual Telemetry Queue
+let statusQueue = [];
+let isProcessingQueue = false;
+
 // UI Elements
 const els = {
     login: document.getElementById("login"),
@@ -31,7 +35,8 @@ const els = {
     modal: document.getElementById("modal-overlay"),
     modalDetails: document.getElementById("modal-details"),
     closeModal: document.getElementById("close-modal"),
-    history: document.getElementById("login-history")
+    history: document.getElementById("login-history"),
+    led: document.getElementById("led")
 };
 
 // Logger
@@ -45,7 +50,41 @@ function log(msg, type = "info") {
 }
 
 function updateStatus(msg) {
-    els.statusLine.textContent = msg;
+    statusQueue.push(msg);
+    if (!isProcessingQueue) {
+        processStatusQueue();
+    }
+}
+
+async function processStatusQueue() {
+    isProcessingQueue = true;
+    while (statusQueue.length > 0) {
+        const msg = statusQueue.shift();
+        
+        const entry = document.createElement("div");
+        entry.className = "status-entry";
+        entry.textContent = msg;
+        els.statusLine.appendChild(entry);
+        
+        // Pacing: ~60ms for smooth high-speed telemetry
+        await new Promise(r => setTimeout(r, 60));
+    }
+    isProcessingQueue = false;
+}
+
+function setSystemState(stateType) {
+    els.led.className = "led"; // Reset
+    switch(stateType) {
+        case 'waiting':
+            els.led.classList.add("led-waiting");
+            break;
+        case 'busy':
+            els.led.classList.add("led-busy");
+            break;
+        case 'ready':
+            els.led.classList.add("led-ready");
+            break;
+    }
 }
 
 // Date Formatter: converts DD.MM.YYYY or YYYY-MM-DD to YYYY-MM-DD
@@ -107,10 +146,12 @@ async function startInjection() {
     const id_ws = els.ws.value;
 
     // MANDATORY: Full UI Reset for new session
+    setSystemState('busy');
     els.selectionArea.classList.add("hidden");
     els.tableContainer.classList.add("hidden");
     els.studentName.textContent = "—";
     els.teacherInfo.innerHTML = "";
+    els.statusLine.innerHTML = ""; // Clear mini-terminal
     document.getElementById("terminal-content").innerHTML = "";
 
     log(`Initializing connection for student ID: ${state.id_student}...`);
@@ -216,12 +257,20 @@ async function startInjection() {
         } else {
             log("Hierarchy analysis complete. All targets secured.", "ok");
         }
+
+        // Wait for visual buffer to empty so the user sees everything
+        while (statusQueue.length > 0 || isProcessingQueue) {
+            await new Promise(r => setTimeout(r, 100));
+        }
+
+        setSystemState('ready');
         updateStatus("SYSTEM READY.");
         populateDisciplines();
         els.selectionArea.classList.remove("hidden");
 
     } catch (e) {
         log(`CRITICAL FAILURE during scan: ${e.message}`, "error");
+        setSystemState('waiting');
         updateStatus("SCAN ABORTED.");
     }
 }
@@ -487,6 +536,7 @@ async function openEditModal(row, rowIdx) {
             }
 
             log(`ATTEMPTING INJECTION: Student ${state.id_student}, Mark ID ${markId}...`, "info");
+            setSystemState('busy');
 
             try {
                 const response = await fetch(`${BASE}/teacher/otsenka`, {
@@ -503,13 +553,16 @@ async function openEditModal(row, rowIdx) {
                 
                 if (response.ok) {
                     log(`SUCCESS: Injection completed! Server message: ${result.message || 'OK'}`, "ok");
+                    setSystemState('ready');
                     alert(`SUCCESS!\nServer says: ${result.message || 'Data saved'}`);
                 } else {
                     log(`FAILED: Status ${response.status}. Message: ${result.message || 'Unknown error'}`, "error");
+                    setSystemState('ready');
                     alert(`FIELD INJECTION FAILED.\nStatus: ${response.status}\nMessage: ${result.message}`);
                 }
             } catch (err) {
                 log(`NETWORK ERROR: ${err.message}`, "error");
+                setSystemState('ready');
                 alert(`CONNECTION LOST: ${err.message}`);
             }
         };
@@ -590,3 +643,4 @@ els.history.onclick = (e) => {
 
 window.deleteHistory = deleteHistory; // Expose to onclick
 renderHistory();
+setSystemState('waiting');

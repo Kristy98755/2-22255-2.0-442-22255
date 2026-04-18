@@ -10,15 +10,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="chip.ico">
 </head>
 
 <body class="hacker-theme">
     <header>
         <div class="header-content">
-            <h1 id="student-name">SYSTEM READY</h1>
+            <div class="top-bar">
+                <h1 id="student-name">SYSTEM READY</h1>
+                <div id="status-container">
+                    <span id="led" class="led led-waiting"></span>
+                    <div id="status-line" class="mini-terminal">Waiting for input...</div>
+                </div>
+            </div>
             <div class="controls">
                 <div class="control-group">
-                    <label for="id-ws">WS:</label>
+                    <label for="id-ws">Полугодие:</label>
                     <select id="id-ws">
                         <option value="2">Осеннее</option>
                         <option value="1" selected>Весеннее</option>
@@ -31,32 +38,25 @@
                         <div id="history-items"></div>
                         <button id="purge-history" class="purge-btn">PURGE ALL</button>
                     </div>
+                <div id="selection-area" class="hidden">
+                    <div class="selection-grid">
+                        <select id="discipline-select">
+                            <option value="" disabled selected>Предмет...</option>
+                        </select>
+                        <select id="type-select" disabled>
+                            <option value="" disabled selected>Тип...</option>
+                        </select>
+                        <select id="module-select" class="hidden">
+                            <option value="" disabled selected>Модуль...</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div id="status-line">Waiting for input...</div>
         </div>
     </header>
 
     <main>
-        <div id="selection-area" class="hidden">
-            <div class="selection-grid">
-                <div class="main-row">
-                    <select id="discipline-select">
-                        <option value="" disabled selected>Предмет...</option>
-                    </select>
-                    <select id="type-select" disabled>
-                        <option value="" disabled selected>Тип...</option>
-                    </select>
-                </div>
-                <div class="sub-row">
-                    <select id="module-select" class="hidden">
-                        <option value="" disabled selected>Модуль...</option>
-                    </select>
-                </div>
-            </div>
-            <div id="teacher-info"></div>
-        </div>
-
+        <div id="teacher-info"></div>
         <div id="table-container" class="hidden">
             <table id="journal-table">
                 <thead>
