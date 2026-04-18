@@ -22,7 +22,7 @@ body {
     font-family: var(--font);
     line-height: 1.6;
     overflow-x: hidden;
-    min-height: 100vh;
+    min-height: 100%;
 }
 
 .hidden {
@@ -41,7 +41,7 @@ header {
     background: rgba(10, 10, 10, 0.25);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
 }
 
 .header-content {
@@ -79,36 +79,59 @@ h1 {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
     transition: 0.3s;
     position: relative;
-    top: -1px; /* Lifted by 1px, no transform conflict */
+    top: -1px;
+    /* Lifted by 1px, no transform conflict */
 }
 
-.led-waiting { 
-    background: #ffea00; 
+.led-waiting {
+    background: #ffea00;
     box-shadow: 0 0 15px #ffea00;
     animation: pulse-yellow 1.5s infinite;
 }
 
-.led-busy { 
-    background: #ff4500; 
+.led-busy {
+    background: #ff4500;
     box-shadow: 0 0 15px #ff4500;
     animation: pulse-red 0.5s infinite;
 }
 
-.led-ready { 
-    background: #00ff00; 
+.led-ready {
+    background: #00ff00;
     box-shadow: 0 0 15px #00ff00;
 }
 
 @keyframes pulse-yellow {
-    0% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.9); }
-    100% { opacity: 1; transform: scale(1); }
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 @keyframes pulse-red {
-    0% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(1.1); }
-    100% { opacity: 1; transform: scale(1); }
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(1.1);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 #status-line {
@@ -133,15 +156,23 @@ h1 {
 }
 
 @keyframes status-slide-up {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .controls {
     display: flex;
     gap: 15px;
     align-items: center;
-    flex-wrap: wrap; /* Safe for smaller screens */
+    flex-wrap: wrap;
+    /* Safe for smaller screens */
     margin-bottom: 10px;
 }
 
@@ -166,7 +197,9 @@ h1 {
 }
 
 /* Form Elements */
-select, input, button {
+select,
+input,
+button {
     background: #000;
     border: 1px solid var(--cyan);
     color: var(--cyan);
@@ -199,9 +232,11 @@ button:hover {
 /* Main Content */
 main {
     max-width: 1400px;
-    margin: 150px auto 20px auto; /* Compensate for fixed header */
+    margin: 150px auto 20px auto;
+    /* Compensate for fixed header */
     padding: 20px;
-    padding-bottom: 250px; /* Space for terminal */
+    padding-bottom: 250px;
+    /* Space for terminal */
 }
 
 #table-container {
@@ -216,11 +251,12 @@ main {
 }
 
 #discipline-select {
-    width: 300px; /* Specific width for header integration */
+    width: 300px;
+    /* Specific width for header integration */
 }
 
 #type-select {
-    width: 140px; 
+    width: 140px;
 }
 
 #module-select {
@@ -244,7 +280,8 @@ table {
     background: transparent;
 }
 
-th, td {
+th,
+td {
     padding: 12px;
     text-align: left;
     border: 1px solid rgba(0, 255, 255, 0.1);
@@ -304,7 +341,8 @@ td.mark-cell:hover {
     height: 160px;
     overflow-y: auto;
     font-size: 0.8rem;
-    color: #0f0; /* Matrix-style green or stay with cyan? Stay with cyan-ish */
+    color: #0f0;
+    /* Matrix-style green or stay with cyan? Stay with cyan-ish */
     color: #8ea890;
 }
 
@@ -318,9 +356,17 @@ td.mark-cell:hover {
     font-size: 0.75rem;
 }
 
-.log-msg.ok { color: #0f0; }
-.log-msg.error { color: #f00; }
-.log-msg.info { color: var(--cyan); }
+.log-msg.ok {
+    color: #0f0;
+}
+
+.log-msg.error {
+    color: #f00;
+}
+
+.log-msg.info {
+    color: var(--cyan);
+}
 
 /* History Popup */
 .history-popup {
@@ -332,14 +378,14 @@ td.mark-cell:hover {
     border: 1px solid var(--cyan);
     z-index: 50;
     margin-top: 5px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     max-height: 350px;
     overflow-y: auto;
 }
 
 .purge-btn {
     display: block;
-    width:calc(100% - 10px);
+    width: calc(100% - 10px);
     margin: 5px;
     padding: 6px;
     background: #200;
@@ -389,7 +435,7 @@ td.mark-cell:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -402,7 +448,8 @@ td.mark-cell:hover {
     padding: 30px;
     width: 500px;
     max-width: 90%;
-    position: relative; /* For the close button */
+    position: relative;
+    /* For the close button */
 }
 
 .modal-close {
@@ -451,12 +498,15 @@ td.mark-cell:hover {
 ::-webkit-scrollbar {
     width: 6px;
 }
+
 ::-webkit-scrollbar-track {
     background: #000;
 }
+
 ::-webkit-scrollbar-thumb {
     background: var(--cyan-dim);
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: var(--cyan);
 }
@@ -502,7 +552,8 @@ td.mark-cell:hover {
         flex-direction: row;
         align-items: center;
         gap: 8px;
-        flex-wrap: wrap; /* Allow selection-area to fall to next line */
+        flex-wrap: wrap;
+        /* Allow selection-area to fall to next line */
     }
 
     #login {
@@ -517,7 +568,8 @@ td.mark-cell:hover {
     }
 
     #selection-area {
-        flex-basis: 100%; /* Always occupies its own line */
+        flex-basis: 100%;
+        /* Always occupies its own line */
         display: block;
         width: 100%;
         border-left: none !important;
@@ -534,17 +586,33 @@ td.mark-cell:hover {
         width: 100%;
     }
 
-    #discipline-select, #type-select, #module-select, #id-ws {
+    #discipline-select,
+    #type-select,
+    #module-select,
+    #id-ws {
         width: 100% !important;
         min-width: 0;
     }
 
-    #discipline-select { grid-column: span 2; } /* Full width */
-    #type-select { grid-column: span 1; }       /* Half width */
-    #module-select { grid-column: span 1; }     /* Half width */
+    #discipline-select {
+        grid-column: span 2;
+    }
+
+    /* Full width */
+    #type-select {
+        grid-column: span 1;
+    }
+
+    /* Half width */
+    #module-select {
+        grid-column: span 1;
+    }
+
+    /* Half width */
 
     main {
-        margin-top: 250px; /* Room for stacked header */
+        margin-top: 250px;
+        /* Room for stacked header */
         padding: 10px;
     }
 
@@ -564,6 +632,6 @@ td.mark-cell:hover {
 
 @media (max-width: 480px) {
     main {
-        margin-top: 280px;
+        margin-top: 300px;
     }
 }
