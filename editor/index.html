@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVN 2.0</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="hacker-theme">
+    <header>
+        <div class="header-content">
+            <h1 id="student-name">SYSTEM READY</h1>
+            <div class="controls">
+                <div class="control-group">
+                    <label for="id-ws">WS:</label>
+                    <select id="id-ws">
+                        <option value="2">Осеннее</option>
+                        <option value="1" selected>Весеннее</option>
+                    </select>
+                </div>
+                <div class="control-group" style="position: relative;">
+                    <input type="text" id="login" placeholder="X-YYYYY" autocomplete="off">
+                    <button id="load-btn">INJECT</button>
+                    <div id="login-history" class="history-popup hidden">
+                        <div id="history-items"></div>
+                        <button id="purge-history" class="purge-btn">PURGE ALL</button>
+                    </div>
+                </div>
+            </div>
+            <div id="status-line">Waiting for input...</div>
+        </div>
+    </header>
+
+    <main>
+        <div id="selection-area" class="hidden">
+            <div class="selection-grid">
+                <div class="main-row">
+                    <select id="discipline-select">
+                        <option value="" disabled selected>Предмет...</option>
+                    </select>
+                    <select id="type-select" disabled>
+                        <option value="" disabled selected>Тип...</option>
+                    </select>
+                </div>
+                <div class="sub-row">
+                    <select id="module-select" class="hidden">
+                        <option value="" disabled selected>Модуль...</option>
+                    </select>
+                </div>
+            </div>
+            <div id="teacher-info"></div>
+        </div>
+
+        <div id="table-container" class="hidden">
+            <table id="journal-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">№ / ТЕМА</th>
+                        <th style="width: 25%;">ДАТА</th>
+                        <th style="width: 25%;">ОЦЕНКА</th>
+                    </tr>
+                </thead>
+                <tbody id="journal-body">
+                    <!-- Заполняется динамически -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div id="terminal-fixed">
+        <div class="terminal-header">GLOBAL EVENT LOG</div>
+        <div id="terminal-content"></div>
+    </div>
+
+    <div id="modal-overlay" class="hidden">
+        <div class="modal">
+            <h3>EDIT DATA</h3>
+            <button id="close-modal" class="modal-close">&times;</button>
+            <div class="modal-mark-selector">
+                <label for="modal-mark">NEW MARK:</label>
+                <select id="modal-mark"></select>
+            </div>
+            <div id="modal-details"></div>
+            <div class="modal-actions">
+                <button id="save-mark" class="btn-cyan">SEND PUT</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
