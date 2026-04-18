@@ -16,13 +16,23 @@
 }
 
 body {
-    background: var(--bg);
-    background: linear-gradient(rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.4)), url('bg.png') center/cover no-repeat fixed;
+    background: var(--bg); /* Fallback */
     color: var(--text);
     font-family: var(--font);
     line-height: 1.6;
     overflow-x: hidden;
     min-height: 100%;
+}
+
+/* Fixed background layer — immune to mobile viewport/scrollbar changes */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0; /* top:0; left:0; right:0; bottom:0 */
+    background: linear-gradient(rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.4)),
+                url('bg.png') center / cover no-repeat;
+    z-index: -1;
+    will-change: transform; /* GPU layer hint */
 }
 
 .hidden {
@@ -633,5 +643,6 @@ td.mark-cell:hover {
 @media (max-width: 480px) {
     main {
         margin-top: 300px;
+        margin-bottom: 205px;
     }
 }
