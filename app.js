@@ -36,8 +36,152 @@ const els = {
     modalDetails: document.getElementById("modal-details"),
     closeModal: document.getElementById("close-modal"),
     history: document.getElementById("login-history"),
-    led: document.getElementById("led")
+    led: document.getElementById("led"),
+    studentSearch: document.getElementById("student-search"),
+    searchResults: document.getElementById("search-results"),
+    searchItems: document.getElementById("search-items")
 };
+
+// Student search data
+let studentsData = {};
+let searchTimeout = null;
+
+async function loadStudentsData() {
+    try {
+        const res = await fetch("students.json");
+        const data = await res.json();
+        const count = Object.keys(data).length;
+        studentsData = data;
+        log(`Students index loaded: ${count} records`, "ok");
+        toggleStudentSearch(true);
+    } catch (e) {
+        log("Failed to load students.json", "error");
+    }
+}
+
+function parseFIO(fio) {
+    const parts = fio.trim().split(/\s+/);
+    return {
+        surname: parts[0] || "",
+        name: parts[1] || "",
+        patronymic: parts.slice(2).join(" ") || ""
+    };
+}
+
+function matchesSearch(query, fio) {
+    if (!query || !query.trim()) return false;
+
+    const orig = query;
+    const q = query.trim();
+    const { surname, name, patronymic } = parseFIO(fio);
+
+    const tSurname = surname.toLowerCase();
+    const tName = name.toLowerCase();
+    const tPatronymic = patronymic.toLowerCase();
+    const hasTrailingSpace = orig.endsWith(' ');
+
+    if (hasTrailingSpace) {
+        const parts = q.split(/\s+/);
+        const lastIdx = parts.length - 1;
+
+        return parts.every((part, idx) => {
+            const term = part.toLowerCase();
+            if (idx === lastIdx) {
+                return tSurname === term || tName === term || tPatronymic === term;
+            }
+            return tSurname === term || tName === term || tPatronymic === term;
+        });
+    } else if (q.includes(' ')) {
+        const parts = q.split(/\s+/);
+        const lastIdx = parts.length - 1;
+
+        return parts.every((part, idx) => {
+            const term = part.toLowerCase();
+            if (idx === lastIdx) {
+                return tSurname.startsWith(term) ||
+                       tName.startsWith(term) ||
+                       tPatronymic.startsWith(term);
+            }
+            return tSurname === term || tName === term || tPatronymic === term;
+        });
+    } else {
+        const term = q.toLowerCase();
+        return tSurname.startsWith(term) ||
+               tName.startsWith(term) ||
+               tPatronymic.startsWith(term);
+    }
+}
+
+function performSearch(query) {
+    const results = [];
+    for (const [id, fio] of Object.entries(studentsData)) {
+        if (matchesSearch(query, fio)) {
+            results.push({ id, fio });
+            if (results.length >= 20) break;
+        }
+    }
+    return results;
+}
+
+function renderSearchResults(results) {
+    if (results.length === 0) {
+        els.searchResults.classList.add("hidden");
+        return;
+    }
+    els.searchItems.innerHTML = results.map(r => `
+        <div class="history-item" data-id="${r.id}" data-fio="${r.fio}">
+            <span class="history-val">${r.id}</span>
+            <span class="fio-val" style="color:var(--text)">${r.fio}</span>
+        </div>
+    `).join("");
+    els.searchResults.classList.remove("hidden");
+}
+
+function handleSearchInput(isWideScreen) {
+    const query = els.studentSearch.value.trim();
+    if (!query || query.length < 2) {
+        els.searchResults.classList.add("hidden");
+        return;
+    }
+    if (searchTimeout) {
+        clearTimeout(searchTimeout);
+    }
+    if (isWideScreen) {
+        const results = performSearch(query);
+        renderSearchResults(results);
+    } else {
+        searchTimeout = setTimeout(() => {
+            const results = performSearch(query);
+            renderSearchResults(results);
+        }, 500);
+    }
+}
+
+els.studentSearch.addEventListener("input", () => handleSearchInput(window.innerWidth > 850));
+els.studentSearch.addEventListener("focus", () => handleSearchInput(window.innerWidth > 850));
+window.addEventListener("resize", () => {
+    const query = els.studentSearch.value.trim();
+    if (query.length >= 2) handleSearchInput(window.innerWidth > 850);
+});
+
+els.searchResults.addEventListener("click", (e) => {
+    const item = e.target.closest(".history-item");
+    if (item) {
+        const id = item.dataset.id;
+        const fio = item.dataset.fio;
+        els.login.value = id;
+        els.studentSearch.value = "";
+        els.searchResults.classList.add("hidden");
+        toggleStudentSearch(false);
+        startInjection();
+    }
+});
+
+document.addEventListener("click", (e) => {
+    if (!els.studentSearch.contains(e.target) && !els.searchResults.contains(e.target)) {
+        els.searchResults.classList.add("hidden");
+    }
+});
 
 // Logger
 function log(msg, type = "info") {
@@ -163,8 +307,9 @@ async function startInjection() {
         state.id_group = user.id_group;
         state.student_fio = `${user.surname} ${user.name} ${user.patronymic}`.trim();
         
-        saveLogin(login); 
-        
+        saveLogin(login);
+        toggleStudentSearch(false);
+
         els.studentName.textContent = state.student_fio;
         log(`LOGIN OK: ${state.student_fio}`, "ok");
 
@@ -616,12 +761,26 @@ function deleteHistory(login) {
     renderHistory();
 }
 
+function toggleStudentSearch(show) {
+    const group = els.studentSearch.closest(".control-group");
+    if (window.innerWidth <= 850) {
+        if (show) {
+            group.classList.remove("mobile-hidden");
+        } else {
+            group.classList.add("mobile-hidden");
+        }
+    } else {
+        group.classList.remove("mobile-hidden");
+    }
+}
+
 els.login.onfocus = () => {
     const history = JSON.parse(localStorage.getItem("avn_history") || "[]");
     if (history.length > 0) {
         renderHistory();
         els.history.classList.remove("hidden");
     }
+    toggleStudentSearch(true);
 };
 
 // Document click to close history
@@ -641,6 +800,8 @@ els.history.onclick = (e) => {
     }
 };
 
-window.deleteHistory = deleteHistory; // Expose to onclick
+window.deleteHistory = deleteHistory;
 renderHistory();
+loadStudentsData();
+toggleStudentSearch(true);
 setSystemState('waiting');

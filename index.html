@@ -32,12 +32,19 @@
                     </select>
                 </div>
                 <div class="control-group" style="position: relative;">
+                    <input type="text" id="student-search" class="mobile-visible" placeholder="Поиск по ФИО..." autocomplete="off">
+                    <div id="search-results" class="history-popup hidden">
+                        <div id="search-items"></div>
+                    </div>
+                </div>
+                <div class="control-group" style="position: relative;">
                     <input type="text" id="login" placeholder="X-YYYYY" autocomplete="off">
                     <button id="load-btn">INJECT</button>
                     <div id="login-history" class="history-popup hidden">
                         <div id="history-items"></div>
                         <button id="purge-history" class="purge-btn">PURGE ALL</button>
                     </div>
+                </div>
                 <div id="selection-area" class="hidden">
                     <div class="selection-grid">
                         <select id="discipline-select">

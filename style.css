@@ -16,7 +16,7 @@
 }
 
 body {
-    background: var(--bg); /* Fallback */
+    background: var(--bg);
     color: var(--text);
     font-family: var(--font);
     line-height: 1.6;
@@ -24,22 +24,20 @@ body {
     min-height: 100%;
 }
 
-/* Fixed background layer — immune to mobile viewport/scrollbar changes */
 body::before {
     content: '';
     position: fixed;
-    inset: 0; /* top:0; left:0; right:0; bottom:0 */
+    inset: 0;
     background: linear-gradient(rgba(10, 10, 10, 0.4), rgba(10, 10, 10, 0.4)),
                 url('bg.png') center / cover no-repeat;
     z-index: -1;
-    will-change: transform; /* GPU layer hint */
+    will-change: transform;
 }
 
 .hidden {
     display: none !important;
 }
 
-/* Header */
 header {
     position: fixed;
     top: 0;
@@ -90,7 +88,6 @@ h1 {
     transition: 0.3s;
     position: relative;
     top: -1px;
-    /* Lifted by 1px, no transform conflict */
 }
 
 .led-waiting {
@@ -111,37 +108,15 @@ h1 {
 }
 
 @keyframes pulse-yellow {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.5;
-        transform: scale(0.9);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
 @keyframes pulse-red {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 0.4;
-        transform: scale(1.1);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-    }
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.1); }
+    100% { opacity: 1; transform: scale(1); }
 }
 
 #status-line {
@@ -166,15 +141,8 @@ h1 {
 }
 
 @keyframes status-slide-up {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .controls {
@@ -182,7 +150,6 @@ h1 {
     gap: 15px;
     align-items: center;
     flex-wrap: wrap;
-    /* Safe for smaller screens */
     margin-bottom: 10px;
 }
 
@@ -206,7 +173,14 @@ h1 {
     gap: 10px;
 }
 
-/* Form Elements */
+#student-search {
+    width: 300px;
+}
+
+.control-group:has(#student-search).mobile-hidden {
+    display: none;
+}
+
 select,
 input,
 button {
@@ -239,14 +213,11 @@ button:hover {
     letter-spacing: 0.5px;
 }
 
-/* Main Content */
 main {
     max-width: 1400px;
     margin: 150px auto 20px auto;
-    /* Compensate for fixed header */
     padding: 20px;
     padding-bottom: 250px;
-    /* Space for terminal */
 }
 
 #table-container {
@@ -262,7 +233,6 @@ main {
 
 #discipline-select {
     width: 300px;
-    /* Specific width for header integration */
 }
 
 #type-select {
@@ -283,7 +253,6 @@ main {
     display: inline-block;
 }
 
-/* Table */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -325,13 +294,12 @@ td.mark-cell:hover {
     text-shadow: 0 0 5px var(--cyan);
 }
 
-/* Terminal */
 #terminal-fixed {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 200px;
+    height: 160px;
     background: rgba(10, 10, 10, 0.25);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -348,11 +316,9 @@ td.mark-cell:hover {
 }
 
 #terminal-content {
-    height: 160px;
+    height: 140px;
     overflow-y: auto;
     font-size: 0.8rem;
-    color: #0f0;
-    /* Matrix-style green or stay with cyan? Stay with cyan-ish */
     color: #8ea890;
 }
 
@@ -366,19 +332,10 @@ td.mark-cell:hover {
     font-size: 0.75rem;
 }
 
-.log-msg.ok {
-    color: #0f0;
-}
+.log-msg.ok { color: #0f0; }
+.log-msg.error { color: #f00; }
+.log-msg.info { color: var(--cyan); }
 
-.log-msg.error {
-    color: #f00;
-}
-
-.log-msg.info {
-    color: var(--cyan);
-}
-
-/* History Popup */
 .history-popup {
     position: absolute;
     top: 100%;
@@ -423,6 +380,16 @@ td.mark-cell:hover {
     color: var(--cyan-dim);
 }
 
+.history-val {
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+.fio-val {
+    text-align: right;
+}
+
 .history-item:hover {
     background: #111;
     color: var(--cyan);
@@ -438,7 +405,6 @@ td.mark-cell:hover {
     color: #f00;
 }
 
-/* Modal */
 #modal-overlay {
     position: fixed;
     top: 0;
@@ -459,7 +425,6 @@ td.mark-cell:hover {
     width: 500px;
     max-width: 90%;
     position: relative;
-    /* For the close button */
 }
 
 .modal-close {
@@ -504,7 +469,6 @@ td.mark-cell:hover {
     color: var(--bg);
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -521,128 +485,31 @@ td.mark-cell:hover {
     background: var(--cyan);
 }
 
-/* Mobile Responsiveness */
 @media (max-width: 850px) {
-    header {
-        padding: 5px 10px;
-    }
-
-    .top-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-        margin-bottom: 10px;
-    }
-
-    h1 {
-        font-size: 1rem;
-    }
-
-    #status-container {
-        justify-content: flex-start;
-        width: auto;
-    }
-
-    .controls {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-
-    .control-group {
-        flex-direction: column;
-        align-items: stretch;
-        width: 100%;
-        gap: 8px;
-    }
-
-    /* Login row stays horizontal */
-    .control-group:has(#login) {
-        flex-direction: row;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        /* Allow selection-area to fall to next line */
-    }
-
-    #login {
-        flex: 1;
-        width: auto !important;
-    }
-
-    #load-btn {
-        width: auto !important;
-        white-space: nowrap;
-        flex-shrink: 0;
-    }
-
-    #selection-area {
-        flex-basis: 100%;
-        /* Always occupies its own line */
-        display: block;
-        width: 100%;
-        border-left: none !important;
-        border-top: 1px solid var(--border);
-        padding-left: 0;
-        padding-top: 15px;
-        margin-left: 0;
-    }
-
-    .selection-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        width: 100%;
-    }
-
-    #discipline-select,
-    #type-select,
-    #module-select,
-    #id-ws {
-        width: 100% !important;
-        min-width: 0;
-    }
-
-    #discipline-select {
-        grid-column: span 2;
-    }
-
-    /* Full width */
-    #type-select {
-        grid-column: span 1;
-    }
-
-    /* Half width */
-    #module-select {
-        grid-column: span 1;
-    }
-
-    /* Half width */
-
-    main {
-        margin-top: 250px;
-        /* Room for stacked header */
-        padding: 10px;
-    }
-
-    #table-container {
-        padding: 10px;
-        overflow-x: auto;
-    }
-
-    table {
-        min-width: 600px;
-    }
-
-    #terminal {
-        height: 150px;
-    }
+    header { padding: 5px 10px; }
+    .top-bar { flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 10px; }
+    h1 { font-size: 1rem; }
+    #status-container { justify-content: flex-start; width: auto; }
+    .controls { display: flex; flex-direction: column; align-items: stretch; gap: 10px; }
+    .control-group { flex-direction: row; align-items: center; width: 100%; gap: 8px; }
+    .control-group:has(#id-ws) { flex-wrap: nowrap; }
+    .control-group:has(#id-ws) label { white-space: nowrap; }
+    .control-group:has(#id-ws) select { flex: 1; }
+    #student-search { flex: 1; }
+    #login { flex: 1; width: auto !important; }
+    #load-btn { width: auto !important; white-space: nowrap; flex-shrink: 0; }
+    #selection-area { flex-basis: 100%; display: block; width: 100%; border-left: none !important; border-top: 1px solid var(--border); padding-left: 0; padding-top: 15px; margin-left: 0; }
+    .selection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; }
+    #discipline-select, #type-select, #module-select, #id-ws { width: 100% !important; min-width: 0; }
+    #discipline-select { grid-column: span 2; }
+    #type-select { grid-column: span 1; }
+    #module-select { grid-column: span 1; }
+    main { margin-top: 250px; padding: 10px; }
+    #table-container { padding: 10px; overflow-x: auto; }
+    table { min-width: 600px; }
+    #terminal { height: 120px; }
 }
 
 @media (max-width: 480px) {
-    main {
-        margin-top: 300px;
-        margin-bottom: 205px;
-    }
+    main { margin-top: 300px; margin-bottom: 205px; }
 }
